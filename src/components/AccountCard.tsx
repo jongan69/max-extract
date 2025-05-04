@@ -7,11 +7,15 @@ import { validateWalletAddress } from '../utils/validation';
 // Stripe config
 import { STRIPE_PRODUCTS } from '../stripe-config';
 
-// Hooks
+// Context Hooks
 import { useAppContext } from '../contexts/AppContext';
+
+// Data Hooks
 import { useCreatedCoins } from '../hooks/useCreatedCoins';
-import { useStripe } from '../hooks/useStripe';
 import { useBalance } from '../hooks/useBalance';
+
+// Payment Hooks
+import { useStripe } from '../hooks/useStripe';
 import { useSendSol } from '../hooks/useSendSol';
 
 interface AccountCardProps {
