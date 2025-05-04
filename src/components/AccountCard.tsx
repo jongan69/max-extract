@@ -1,5 +1,6 @@
 import React from 'react';
 import { ThumbsUp, ThumbsDown, Twitter, ExternalLink, Wallet, Coins, Trash2 } from 'lucide-react';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { RuggerAccount } from '../types';
 import { useAppContext } from '../contexts/AppContext';
 import { validateWalletAddress } from '../utils/validation';
@@ -11,7 +12,9 @@ interface AccountCardProps {
   account: RuggerAccount;
 }
 
+
 const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
+  const wallet = useWallet();
   const { upvoteAccount, downvoteAccount } = useAppContext();
   const { createCheckoutSession, loading: checkoutLoading } = useStripe({
     onError: (error) => {

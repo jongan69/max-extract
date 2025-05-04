@@ -1,5 +1,6 @@
 import bs58 from "bs58";
 import nacl from "tweetnacl";
+
 type SignMessage = {
   domain: string;
   publicKey: string;

@@ -4,7 +4,7 @@ import Stripe from 'npm:stripe@17.7.0';
 const stripeSecret = Deno.env.get('STRIPE_SECRET_KEY')!;
 const stripe = new Stripe(stripeSecret, {
   appInfo: {
-    name: 'Bolt Integration',
+    name: 'Max Extract',
     version: '1.0.0',
   },
 });
@@ -15,7 +15,7 @@ function corsResponse(body: string | object | null, status = 200) {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': '*',
-    'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`
+    'Authorization': `Bearer ${Deno.env.get('SB_SERVICE_ROLE_KEY')}`
   };
 
   // For 204 No Content, don't include Content-Type or body

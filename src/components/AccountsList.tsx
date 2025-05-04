@@ -42,9 +42,9 @@ const AccountsList: React.FC = () => {
 
   if (accounts.length === 0) {
     return (
-      <div className="bg-white rounded-xl shadow-sm p-8 text-center">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-8 text-center">
         <h2 className="text-xl font-semibold mb-2">No accounts yet</h2>
-        <p className="text-gray-600 mb-4">Be the first to submit a Twitter account for voting!</p>
+        <p className="text-gray-600 dark:text-gray-400 mb-4">Be the first to submit a Twitter account for voting!</p>
       </div>
     );
   }

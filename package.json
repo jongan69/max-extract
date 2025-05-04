@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:supabase": "supabase start && supabase functions serve --env-file .env.local",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

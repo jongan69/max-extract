@@ -1,10 +1,8 @@
 import { useWallet } from "@solana/wallet-adapter-react";
-import bs58 from "bs58";
 import { useState, useEffect, useRef } from "react";
-import { SigninMessage } from "../utils/signinmessage";
-import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import ReactDOM from "react-dom";
 import { Lock, Loader2, XCircle } from 'lucide-react';
+import { useAuth } from '../hooks/useAuth';
 
 // Add prop types
 interface CreateAccountModalProps {
@@ -14,65 +12,21 @@ interface CreateAccountModalProps {
 
 export function CreateAccountModal({ open, onClose }: CreateAccountModalProps) {
   const wallet = useWallet();
-  const walletModal = useWalletModal();
+  const { authenticateWithWallet } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // Generate a random nonce (or fetch from backend if you want server-generated CSRF)
-  const generateNonce = () => window.crypto.randomUUID();
 
   const handleCreateAccount = async () => {
     setError(null);
     setLoading(true);
     try {
-      if (!wallet.connected) {
-        walletModal.setVisible(true);
-        setLoading(false);
-        return;
-      }
-      if (!wallet.publicKey || !wallet.signMessage) {
-        setError("Wallet not ready");
-        setLoading(false);
-        return;
-      }
-
-      const nonce = generateNonce();
-      const message = new SigninMessage({
-        domain: window.location.host,
-        publicKey: wallet.publicKey.toBase58(),
-        statement: "Sign this message to create your account.",
-        nonce,
-      });
-
-      const data = new TextEncoder().encode(message.prepare());
-      const signature = await wallet.signMessage(data);
-      const serializedSignature = bs58.encode(signature);
-
-      // POST to your edge function
-      const res = await fetch("/functions/v1/wallet-authenticate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: JSON.stringify(message),
-          signature: serializedSignature,
-        }),
-      });
-
-      if (!res.ok) {
-        setError("Authentication failed");
-        setLoading(false);
-        return;
-      }
-
-      const result = await res.json();
-      // Store JWT or user info as needed
-      localStorage.setItem("jwt", result.token) // if you return a JWT
-      // or set user state, etc.
-
+      const result = await authenticateWithWallet(wallet);
+      console.log('Authentication result:', result);
+      // JWT and user info already handled in hook)
       setLoading(false);
       onClose();
     } catch (err) {
-      setError("Error signing in: " + (err as Error).message);
+      setError('Error signing in: ' + (err as Error).message);
       setLoading(false);
     }
   };
