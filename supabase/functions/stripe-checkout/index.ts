@@ -1,6 +1,8 @@
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
+// @ts-ignore
 import Stripe from 'npm:stripe@17.7.0';
 
+// @ts-ignore
 const stripeSecret = Deno.env.get('STRIPE_SECRET_KEY')!;
 const stripe = new Stripe(stripeSecret, {
   appInfo: {
@@ -15,6 +17,7 @@ function corsResponse(body: string | object | null, status = 200) {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': '*',
+    // @ts-ignore
     'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`
   };
 
@@ -32,6 +35,7 @@ function corsResponse(body: string | object | null, status = 200) {
   });
 }
 
+// @ts-ignore
 Deno.serve(async (req) => {
   try {
     if (req.method === 'OPTIONS') {

@@ -1,8 +1,12 @@
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
+// @ts-ignore
 import Stripe from 'npm:stripe@17.7.0';
+// @ts-ignore
 import { createClient } from 'npm:@supabase/supabase-js@2.49.1';
 
+// @ts-ignore
 const stripeSecret = Deno.env.get('STRIPE_SECRET_KEY')!;
+// @ts-ignore
 const stripeWebhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET')!;
 const stripe = new Stripe(stripeSecret, {
   appInfo: {
@@ -11,8 +15,10 @@ const stripe = new Stripe(stripeSecret, {
   },
 });
 
+// @ts-ignore
 const supabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
 
+// @ts-ignore
 Deno.serve(async (req) => {
   try {
     // Handle OPTIONS request for CORS preflight
@@ -44,6 +50,7 @@ Deno.serve(async (req) => {
       return new Response(`Webhook signature verification failed: ${error.message}`, { status: 400 });
     }
 
+    // @ts-ignore
     EdgeRuntime.waitUntil(handleEvent(event));
 
     return Response.json({ received: true });

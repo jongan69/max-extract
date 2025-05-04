@@ -1,6 +1,10 @@
+// @ts-ignore
 import { createClient } from 'npm:@supabase/supabase-js@2.49.1';
+// @ts-ignore
 import bs58 from "npm:bs58@6.0.0";
+// @ts-ignore
 import nacl from "npm:tweetnacl@1.0.3";
+// @ts-ignore
 import { create, getNumericDate, Header, Payload } from "https://deno.land/x/djwt@v2.8/mod.ts";
 
 type SignMessage = {
@@ -51,6 +55,7 @@ function corsResponse(body: string | object | null, status = 200) {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': '*',
+    // @ts-ignore
     'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`
   };
 
@@ -68,12 +73,16 @@ function corsResponse(body: string | object | null, status = 200) {
   });
 }
 
+// @ts-ignore
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+// @ts-ignore
 const supabaseServiceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+// @ts-ignore
 const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
   auth: { autoRefreshToken: false, persistSession: false }
 });
 
+// @ts-ignore
 Deno.serve(async (req: Request): Promise<Response> => {
   console.log("Received request:", req.method, req.url);
   if (req.method === 'OPTIONS') {
@@ -102,6 +111,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   // Validate message and signature
   try {
     const signinMessage = new SigninMessage(JSON.parse(message || "{}"));
+    // @ts-ignore
     const expectedDomain = new URL(Deno.env.get("AUTH_URL")!).host;
     console.log("Expected domain:", expectedDomain);
     console.log("SigninMessage domain:", signinMessage.domain);
@@ -158,6 +168,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
     // Issue a custom JWT for the user (wallet session)
     console.log("Issuing custom JWT session for user:", publicKey);
+    // @ts-ignore
     const jwtSecret = Deno.env.get("JWT_SECRET");
     console.log("JWT_SECRET from env:", jwtSecret);
     if (!jwtSecret) {

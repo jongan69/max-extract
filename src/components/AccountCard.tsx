@@ -146,20 +146,31 @@ const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
           <div className="mb-3 text-sm text-gray-500 dark:text-gray-400">Loading balance...</div>
         ) : (
           <div className="mb-3 flex flex-col gap-1 text-sm">
-            <div>
-              <span className="font-medium text-gray-700 dark:text-gray-200">SOL:</span>
-              <span className="ml-2">{balance?.solBalance?.toFixed(4) ?? '0.0000'} SOL</span>
-              <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
-                ({formatUSD(balance?.solBalanceUsd ?? 0)})
-              </span>
-            </div>
-            <div>
-              <span className="font-medium text-gray-700 dark:text-gray-200">USDC:</span>
-              <span className="ml-2">{balance?.usdcBalance?.toFixed(4) ?? '0.0000'} USDC</span>
-              <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
-                ({formatUSD(balance?.usdcBalance ?? 0)})
-              </span>
-            </div>
+            {walletType === 'solana' ? (
+              <div>
+                <span className="font-medium text-gray-700 dark:text-gray-200">SOL:</span>
+                <span className="ml-2">{(balance as any)?.solBalance?.toFixed(4) ?? '0.0000'} SOL</span>
+                <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
+                  ({formatUSD((balance as any)?.solBalanceUsd ?? 0)})
+                </span>
+                <br />
+                <span className="font-medium text-gray-700 dark:text-gray-200">USDC:</span>
+                <span className="ml-2">{(balance as any)?.usdcBalance?.toFixed(4) ?? '0.0000'} USDC</span>
+                <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
+                  ({formatUSD((balance as any)?.usdcBalance ?? 0)})
+                </span>
+              </div>
+            ) : walletType === 'ethereum' ? (
+              <div>
+                <span className="font-medium text-gray-700 dark:text-gray-200">ETH:</span>
+                <span className="ml-2">{(balance as any)?.balanceEther?.toFixed(4) ?? '0.0000'} ETH</span>
+                <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
+                  ({formatUSD((balance as any)?.balanceUsd ?? 0)})
+                </span>
+              </div>
+            ) : (
+              <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">N/A</span>
+            )}
           </div>
         )}
 

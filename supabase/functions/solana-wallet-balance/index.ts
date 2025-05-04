@@ -1,7 +1,9 @@
 // Deno edge function for fetching wallet holdings from Helius
 
 // Helius API Key
+// @ts-ignore
 const HELIUS_API_KEY = Deno.env.get("HELIUS_API_KEY");
+// @ts-ignore
 const HELIUS_RPC_URL = "https://mainnet.helius-rpc.com";
 
 // Helper function to create responses with CORS headers
@@ -10,6 +12,7 @@ function corsResponse(body: string | object | null, status = 200) {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'POST, OPTIONS',
         'Access-Control-Allow-Headers': '*',
+        // @ts-ignore
         'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`
     };
 
@@ -26,7 +29,7 @@ function corsResponse(body: string | object | null, status = 200) {
         },
     });
 }
-
+// @ts-ignore
 Deno.serve(async (req) => {
     const url = new URL(req.url);
     const address = url.searchParams.get("address");

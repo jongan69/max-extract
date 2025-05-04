@@ -7,6 +7,7 @@ function corsResponse(body, status = 200) {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "*",
+    // @ts-ignore
     "Authorization": `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`
   };
   if (status === 204) {
@@ -23,6 +24,7 @@ function corsResponse(body, status = 200) {
     }
   });
 }
+// @ts-ignore
 Deno.serve(async (req)=>{
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
