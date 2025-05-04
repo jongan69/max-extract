@@ -1,6 +1,5 @@
 import { fetchBalance } from '../utils/fetchBalance';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Balance {
   usdcBalance: number;

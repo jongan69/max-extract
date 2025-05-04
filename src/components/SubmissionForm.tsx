@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { AtSign, Send, Wallet } from 'lucide-react';
 import { useAppContext } from '../contexts/AppContext';
 import { validateWalletAddress } from '../utils/validation';
+// import { usePfp } from '../hooks/usePfp';
+import { fetchPfp } from '../utils/fetchPfp';
 
 const SubmissionForm: React.FC = () => {
   const [handle, setHandle] = useState('');
@@ -10,6 +12,7 @@ const SubmissionForm: React.FC = () => {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { addAccount, accounts } = useAppContext();
+  // const { profileImage } = usePfp(handle);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,9 +49,16 @@ const SubmissionForm: React.FC = () => {
     setError('');
 
     // Look up handle on twitter for profile image
-    
+    const profile = await fetchPfp(cleanHandle);
+
+    if (!profile || !profile.avatar) {
+      setError('Twitter account not found. Please enter a valid Twitter handle.');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
-      await addAccount(cleanHandle, walletAddress.trim(), description);
+      await addAccount(cleanHandle, walletAddress.trim(), description, profile.avatar);
       setHandle('');
       setWalletAddress('');
       setDescription('');

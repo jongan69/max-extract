@@ -73,7 +73,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           wallet_address: walletAddress,
           description,
           created_by: user?.id || null,
-          profile_image: profileImage || null
+          profileImage: profileImage || null
         });
 
       if (error) throw error;
