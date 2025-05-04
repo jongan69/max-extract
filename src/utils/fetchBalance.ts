@@ -4,7 +4,7 @@ export const fetchBalance = async (walletAddress: string) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-            },
+              },
         });
         const data = await response.json();
         return data;

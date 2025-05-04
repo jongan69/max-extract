@@ -30,7 +30,7 @@ export function useBalance(walletAddress: string) {
       console.log('fetching balance');
       fetchBalanceData();
     }
-  }, []);
+  }, [walletAddress]);
 
   return {
     balance,
