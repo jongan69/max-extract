@@ -44,6 +44,8 @@ const SubmissionForm: React.FC = () => {
     
     setIsSubmitting(true);
     setError('');
+
+    // Look up handle on twitter for profile image
     
     try {
       await addAccount(cleanHandle, walletAddress.trim(), description);

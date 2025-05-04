@@ -6,6 +6,7 @@ export interface RuggerAccount {
   createdAt: number;
   upvotes: number;
   downvotes: number;
+  profileImage: string;
 }
 
 export interface CreatedCoin {

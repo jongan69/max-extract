@@ -5,7 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 
 interface AppContextType {
   accounts: RuggerAccount[];
-  addAccount: (handle: string, walletAddress: string, description: string) => Promise<void>;
+  addAccount: (handle: string, walletAddress: string, description: string, profileImage: string) => Promise<void>;
   upvoteAccount: (id: string) => Promise<void>;
   downvoteAccount: (id: string) => Promise<void>;
   sortOption: SortOption;
@@ -25,7 +25,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { user, jwtPayload } = useAuth();
+  const { user } = useAuth();
 
   useEffect(() => {
     fetchAccounts();
@@ -51,7 +51,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         description: rugger.description || '',
         createdAt: new Date(rugger.created_at).getTime(),
         upvotes: rugger.votes?.filter((v: { vote_type: string; }) => v.vote_type === 'up').length || 0,
-        downvotes: rugger.votes?.filter((v: { vote_type: string; }) => v.vote_type === 'down').length || 0
+        downvotes: rugger.votes?.filter((v: { vote_type: string; }) => v.vote_type === 'down').length || 0,
+        profileImage: rugger.profile_image || null
       }));
 
       setAccounts(formattedAccounts);
@@ -63,7 +64,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  const addAccount = async (handle: string, walletAddress: string, description: string) => {
+  const addAccount = async (handle: string, walletAddress: string, description: string, profileImage: string) => {
     try {
       const { error } = await supabase
         .from('ruggers')
@@ -71,7 +72,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           handle: handle.startsWith('@') ? handle : `@${handle}`,
           wallet_address: walletAddress,
           description,
-          created_by: jwtPayload?.user_id || null
+          created_by: user?.id || null,
+          profile_image: profileImage || null
         });
 
       if (error) throw error;
@@ -89,7 +91,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         .from('votes')
         .select()
         .eq('rugger_id', id)
-        .eq('user_id', user.id)
+        .eq('user_id', user?.id)
         .single();
 
       if (existingVote) {
@@ -109,7 +111,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           .insert({
             rugger_id: id,
             vote_type: voteType,
-            user_id: user.id
+            user_id: user?.id
           });
 
         if (error) throw error;
