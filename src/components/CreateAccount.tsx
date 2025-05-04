@@ -21,8 +21,10 @@ export function CreateAccountModal({ open, onClose }: CreateAccountModalProps) {
     setLoading(true);
     try {
       const result = await authenticateWithWallet(wallet);
-      console.log('Authentication result:', result);
+      // console.log('Authentication result:', result);
       // JWT and user info already handled in hook)
+      const parsedResult = JSON.parse(result);
+      if(parsedResult) console.log('User status', parsedResult.user.aud);
       setLoading(false);
       onClose();
     } catch (err) {

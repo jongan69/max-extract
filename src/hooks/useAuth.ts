@@ -80,7 +80,7 @@ export function useAuth() {
     }
     const result = await res.json();
     // Store JWT or user info as needed
-    console.log('Authentication result:', result);
+    // console.log('Authentication result:', result);
     const parsedResult = JSON.parse(result);
     if (parsedResult.token && typeof parsedResult.token === 'string') {
       localStorage.setItem('jwt', parsedResult.token);

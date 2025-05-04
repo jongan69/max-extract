@@ -1,9 +1,9 @@
-import { Connection } from "@solana/web3.js";
+import { Connection, TransactionSignature, VersionedTransaction } from "@solana/web3.js";
+// import { SendTransactionOptions} from '@solana/wallet-adapter-react'
 import { SystemProgram } from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
 import { Transaction } from "@solana/web3.js";
 import { DEFAULT_WALLET } from "./constants";
-import { useWallet } from "@solana/wallet-adapter-react";
 
 const fetchPrice = async () => {
     try {
@@ -16,23 +16,24 @@ const fetchPrice = async () => {
     }
 }
 
-export const processSolTransfer = async (amountUsd: number) => {
-    const { publicKey, sendTransaction } = useWallet();
+export const processSolTransfer = async (amountUsd: number, connection: Connection, publicKey: PublicKey, sendTransaction: (transaction: Transaction | VersionedTransaction, connection: Connection, options?: any) => Promise<TransactionSignature>) => {
     const price = await fetchPrice();
 
     if (!publicKey || price === 0) {
         throw new Error('Wallet not connected or price not found');
     }
 
-    const amount = amountUsd / price * 10 ** 9;
-    const connection = new Connection(import.meta.env.VITE_HELIUS_SECURE_RPC_URL!);
+    const amountInSol = amountUsd / price;
+    const amountInLamports = amountInSol * 10 ** 9;
     let transaction = new Transaction();
+
+    console.log(`Attempting to send ${amountInSol} SOL to ${DEFAULT_WALLET} @ ${price} USD perSOL`);
 
     transaction.add(
         SystemProgram.transfer({
             fromPubkey: publicKey,
             toPubkey: new PublicKey(DEFAULT_WALLET),
-            lamports: amount
+            lamports: Math.round(amountInLamports)
         })
     );
 

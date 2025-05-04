@@ -9,14 +9,16 @@ import { useStripe } from '../hooks/useStripe';
 import { STRIPE_PRODUCTS } from '../stripe-config';
 import { processSolTransfer } from '../utils/sendsol';
 import { useBalance } from '../hooks/useBalance';
+import { Connection } from '@solana/web3.js';
 
 interface AccountCardProps {
   account: RuggerAccount;
 }
 
 const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
-  const wallet = useWallet();
+  const { connected, publicKey, sendTransaction } = useWallet();
   const { upvoteAccount, downvoteAccount, deleteAccount } = useAppContext();
+  const connection = new Connection(import.meta.env.VITE_HELIUS_SECURE_RPC_URL!);
   const { createCheckoutSession, loading: checkoutLoading } = useStripe({
     onError: (error) => {
       console.error('Checkout error:', error);
@@ -51,16 +53,16 @@ const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
 
   const handleDeleteAccount = async () => {
     if (window.confirm(`Are you sure you want to remove this account? This will cost ${formatUSD(STRIPE_PRODUCTS.REMOVE_ACCOUNT.price)}.`)) {
-      if (walletType === 'solana' && wallet.connected) {
+      if (walletType === 'solana' && connected && publicKey) {
         try {
-          const confirmation = await processSolTransfer(STRIPE_PRODUCTS.REMOVE_ACCOUNT.price);
+          const confirmation = await processSolTransfer(STRIPE_PRODUCTS.REMOVE_ACCOUNT.price, connection, publicKey, sendTransaction);
           // TODO: Actually delete the account after payment (add your logic here)
           if (confirmation) {
             await deleteAccount(id);
           }
         } catch (err) {
           console.error('SOL payment failed:', err);
-          alert(err instanceof Error ? err.message : 'SOL payment failed.');
+          // alert(err instanceof Error ? err.message : 'SOL payment failed.');
         }
       } else {
         await createCheckoutSession('REMOVE_ACCOUNT', id);
