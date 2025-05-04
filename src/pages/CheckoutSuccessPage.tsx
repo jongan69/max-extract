@@ -1,8 +1,17 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
+import { useAppContext } from '../contexts/AppContext';
 
 const CheckoutSuccessPage: React.FC = () => {
+  const { accountId } = useParams();
+  const { deleteAccount } = useAppContext();
+
+  useEffect(() => {
+    if (accountId) {
+      deleteAccount(accountId);
+    }
+  }, [accountId]);
   return (
     <div className="max-w-lg mx-auto text-center">
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8">

@@ -10,7 +10,7 @@ export function useStripe(options: UseStripeOptions = {}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const createCheckoutSession = async (productKey: keyof typeof STRIPE_PRODUCTS) => {
+  const createCheckoutSession = async (productKey: keyof typeof STRIPE_PRODUCTS, accountId: string) => {
     setLoading(true);
     setError(null);
 
@@ -25,7 +25,7 @@ export function useStripe(options: UseStripeOptions = {}) {
         },
         body: JSON.stringify({
           price_id: product.priceId,
-          success_url: `${window.location.origin}/checkout/success`,
+          success_url: `${window.location.origin}/checkout/success?accountId=${accountId}`,
           cancel_url: `${window.location.origin}/checkout/cancel`,
           mode: product.mode,
         }),

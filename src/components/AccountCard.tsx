@@ -7,15 +7,16 @@ import { validateWalletAddress } from '../utils/validation';
 import { useCreatedCoins } from '../hooks/useCreatedCoins';
 import { useStripe } from '../hooks/useStripe';
 import { STRIPE_PRODUCTS } from '../stripe-config';
+import { processSolTransfer } from '../utils/sendsol';
+import { useBalance } from '../hooks/useBalance';
 
 interface AccountCardProps {
   account: RuggerAccount;
 }
 
-
 const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
   const wallet = useWallet();
-  const { upvoteAccount, downvoteAccount } = useAppContext();
+  const { upvoteAccount, downvoteAccount, deleteAccount } = useAppContext();
   const { createCheckoutSession, loading: checkoutLoading } = useStripe({
     onError: (error) => {
       console.error('Checkout error:', error);
@@ -25,6 +26,7 @@ const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
   
   const { id, handle, walletAddress, description, upvotes, downvotes } = account;
   const { coins, isLoading } = useCreatedCoins(walletAddress);
+  const { balance, isLoading: balanceLoading } = useBalance(walletAddress);
   
   const score = upvotes - downvotes;
   const formattedHandle = handle.startsWith('@') ? handle : `@${handle}`;
@@ -50,7 +52,20 @@ const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
 
   const handleDeleteAccount = async () => {
     if (window.confirm(`Are you sure you want to remove this account? This will cost ${formatUSD(STRIPE_PRODUCTS.REMOVE_ACCOUNT.price)}.`)) {
-      await createCheckoutSession('REMOVE_ACCOUNT');
+      if (walletType === 'solana' && wallet.connected) {
+        try {
+          const confirmation = await processSolTransfer(STRIPE_PRODUCTS.REMOVE_ACCOUNT.price);
+          // TODO: Actually delete the account after payment (add your logic here)
+          if (confirmation) {
+            await deleteAccount(id);
+          }
+        } catch (err) {
+          console.error('SOL payment failed:', err);
+          alert(err instanceof Error ? err.message : 'SOL payment failed.');
+        }
+      } else {
+        await createCheckoutSession('REMOVE_ACCOUNT', id);
+      }
     }
   };
 
@@ -114,6 +129,27 @@ const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
             </span>
           </a>
         </div>
+
+        {balanceLoading ? (
+          <div className="mb-3 text-sm text-gray-500 dark:text-gray-400">Loading balance...</div>
+        ) : (
+          <div className="mb-3 flex flex-col gap-1 text-sm">
+            <div>
+              <span className="font-medium text-gray-700 dark:text-gray-200">SOL:</span>
+              <span className="ml-2">{balance?.solBalance?.toFixed(4) ?? '0.0000'} SOL</span>
+              <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
+                ({formatUSD(balance?.solBalanceUsd ?? 0)})
+              </span>
+            </div>
+            <div>
+              <span className="font-medium text-gray-700 dark:text-gray-200">USDC:</span>
+              <span className="ml-2">{balance?.usdcBalance?.toFixed(4) ?? '0.0000'} USDC</span>
+              <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
+                ({formatUSD(balance?.usdcBalance ?? 0)})
+              </span>
+            </div>
+          </div>
+        )}
 
         {description && (
           <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 text-sm">

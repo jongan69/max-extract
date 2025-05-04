@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { RuggerAccount, SortOption } from '../types';
 import { supabase } from '../lib/supabase';
+import { useAuth } from '../hooks/useAuth';
 
 interface AppContextType {
   accounts: RuggerAccount[];
@@ -13,6 +14,7 @@ interface AppContextType {
   setSearchTerm: (term: string) => void;
   loading: boolean;
   error: string | null;
+  deleteAccount: (id: string) => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -23,6 +25,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { user, jwtPayload } = useAuth();
 
   useEffect(() => {
     fetchAccounts();
@@ -62,15 +65,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const addAccount = async (handle: string, walletAddress: string, description: string) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
       const { error } = await supabase
         .from('ruggers')
         .insert({
           handle: handle.startsWith('@') ? handle : `@${handle}`,
           wallet_address: walletAddress,
           description,
-          created_by: user?.id || null
+          created_by: jwtPayload?.user_id || null
         });
 
       if (error) throw error;
@@ -84,12 +85,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const vote = async (id: string, voteType: 'up' | 'down') => {
     try {
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      
-      if (userError || !user) {
-        throw new Error('You must be logged in to vote');
-      }
-
       const { data: existingVote } = await supabase
         .from('votes')
         .select()
@@ -135,6 +130,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     await vote(id, 'down');
   };
 
+  const deleteAccount = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('ruggers')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
+      await fetchAccounts();
+    } catch (err) {
+      setError('Failed to delete account');
+      console.error(err);
+      throw err;
+    }
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -147,7 +157,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         searchTerm,
         setSearchTerm,
         loading,
-        error
+        error,
+        deleteAccount
       }}
     >
       {children}

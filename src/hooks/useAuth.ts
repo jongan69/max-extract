@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { User } from '@supabase/supabase-js';
 import bs58 from 'bs58';
 import { SigninMessage } from '../utils/signinmessage';
 import { jwtDecode } from 'jwt-decode';

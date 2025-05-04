@@ -47,9 +47,9 @@ export function CreateAccountModal({ open, onClose }: CreateAccountModalProps) {
           <span className="bg-blue-100 dark:bg-blue-900 p-2 rounded-md mb-2">
             <Lock className="h-7 w-7 text-blue-500 dark:text-blue-400" />
           </span>
-          <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-1">Create Account</h2>
+          <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-1">Sign In</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm text-center max-w-xs">
-            Securely create your account by signing a message with your wallet.
+            Securely create or access your account by signing a message with your wallet.
           </p>
         </div>
         {error && (
@@ -68,7 +68,7 @@ export function CreateAccountModal({ open, onClose }: CreateAccountModalProps) {
               <Loader2 className="h-5 w-5 mr-2 animate-spin" /> Creating...
             </>
           ) : (
-            <>Create Account</>
+            <>Sign Message</>
           )}
         </button>
         <button

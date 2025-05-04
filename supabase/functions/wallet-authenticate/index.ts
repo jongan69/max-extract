@@ -51,7 +51,7 @@ function corsResponse(body: string | object | null, status = 200) {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': '*',
-    'Authorization': `Bearer ${Deno.env.get('SB_SERVICE_ROLE_KEY')}`
+    'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`
   };
 
   // For 204 No Content, don't include Content-Type or body
@@ -69,7 +69,7 @@ function corsResponse(body: string | object | null, status = 200) {
 }
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-const supabaseServiceRoleKey = Deno.env.get("SB_SERVICE_ROLE_KEY")!;
+const supabaseServiceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
   auth: { autoRefreshToken: false, persistSession: false }
 });
