@@ -24,7 +24,7 @@ const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
     }
   });
   
-  const { id, handle, walletAddress, description, upvotes, downvotes } = account;
+  const { id, handle, walletAddress, description, upvotes, downvotes, profileImage } = account;
   const { coins, isLoading } = useCreatedCoins(walletAddress);
   const { balance, isLoading: balanceLoading } = useBalance(walletAddress);
   const score = upvotes - downvotes;
@@ -74,7 +74,11 @@ const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
         <div className="flex items-start gap-3 mb-3">
           <div className="flex items-center gap-2 flex-shrink-0">
             <div className="bg-blue-100 dark:bg-blue-900 rounded-full p-2">
-              <Twitter className="h-5 w-5 text-blue-500 dark:text-blue-400" />
+              {profileImage ? (
+                <img src={profileImage} alt={formattedHandle} className="h-12 w-12 rounded-full" />
+              ) : (
+                <Twitter className="h-5 w-5 text-blue-500 dark:text-blue-400" />
+              )}
             </div>
           </div>
 

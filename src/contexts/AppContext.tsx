@@ -52,7 +52,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         createdAt: new Date(rugger.created_at).getTime(),
         upvotes: rugger.votes?.filter((v: { vote_type: string; }) => v.vote_type === 'up').length || 0,
         downvotes: rugger.votes?.filter((v: { vote_type: string; }) => v.vote_type === 'down').length || 0,
-        profileImage: rugger.profile_image || null
+        profileImage: rugger.profileImage || null
       }));
 
       setAccounts(formattedAccounts);
@@ -87,6 +87,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const vote = async (id: string, voteType: 'up' | 'down') => {
     try {
+      if (!user) {
+        alert('You must be logged in to vote');
+        return;
+      }
       const { data: existingVote } = await supabase
         .from('votes')
         .select()
