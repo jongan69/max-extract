@@ -27,8 +27,11 @@ const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
   const { id, handle, walletAddress, description, upvotes, downvotes } = account;
   const { coins, isLoading } = useCreatedCoins(walletAddress);
   const { balance, isLoading: balanceLoading } = useBalance(walletAddress);
-  console.log('balance', balance);
   const score = upvotes - downvotes;
+  console.log('id', id);
+  console.log('walletAddress', walletAddress);
+  console.log('handle', handle);
+  console.log('balance', balance);
   const formattedHandle = handle.startsWith('@') ? handle : `@${handle}`;
   const cleanHandle = formattedHandle.replace('@', '');
   const shortWallet = `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`;
