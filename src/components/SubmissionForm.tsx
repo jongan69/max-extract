@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { AtSign, Send, Wallet, Loader2 } from 'lucide-react';
 import { useAppContext } from '../contexts/AppContext';
 import { validateWalletAddress } from '../utils/validation';
-// import { usePfp } from '../hooks/usePfp';
 import { fetchPfp } from '../utils/fetchPfp';
 
 const SubmissionForm: React.FC = () => {
@@ -12,7 +11,6 @@ const SubmissionForm: React.FC = () => {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { addAccount, accounts } = useAppContext();
-  // const { profileImage } = usePfp(handle);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
