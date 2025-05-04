@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AtSign, Send, Wallet } from 'lucide-react';
+import { AtSign, Send, Wallet, Loader2 } from 'lucide-react';
 import { useAppContext } from '../contexts/AppContext';
 import { validateWalletAddress } from '../utils/validation';
 // import { usePfp } from '../hooks/usePfp';
@@ -89,6 +89,7 @@ const SubmissionForm: React.FC = () => {
               className="pl-10 w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               value={handle}
               onChange={(e) => setHandle(e.target.value)}
+              disabled={isSubmitting}
             />
           </div>
         </div>
@@ -108,6 +109,7 @@ const SubmissionForm: React.FC = () => {
               className="pl-10 w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               value={walletAddress}
               onChange={(e) => setWalletAddress(e.target.value)}
+              disabled={isSubmitting}
             />
           </div>
         </div>
@@ -123,6 +125,7 @@ const SubmissionForm: React.FC = () => {
             rows={3}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            disabled={isSubmitting}
           />
         </div>
         
@@ -138,7 +141,10 @@ const SubmissionForm: React.FC = () => {
           className="w-full flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50"
         >
           {isSubmitting ? (
-            <>Submitting...</>
+            <>
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              Submitting...
+            </>
           ) : (
             <>
               <Send className="h-4 w-4 mr-2" />
