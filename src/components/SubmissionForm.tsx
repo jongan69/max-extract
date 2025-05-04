@@ -52,7 +52,7 @@ const SubmissionForm: React.FC = () => {
     const profile = await fetchPfp(cleanHandle);
 
     if (!profile || !profile.avatar) {
-      setError('Twitter account not found. Please enter a valid Twitter handle.');
+      setError('Twitter account not found. Please enter a valid Twitter handle or try again.');
       setIsSubmitting(false);
       return;
     }
