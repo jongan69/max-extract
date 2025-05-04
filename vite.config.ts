@@ -16,4 +16,15 @@ export default defineConfig({
       },
     },
   },
+  define: {
+    // Add Buffer polyfill
+    global: {},
+    'process.env': {},
+  },
+  resolve: {
+    alias: {
+      // Add Buffer polyfill
+      buffer: 'buffer/',
+    },
+  }
 });
