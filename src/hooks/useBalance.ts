@@ -25,8 +25,10 @@ export function useBalance(walletAddress: string) {
         setIsLoading(false);
       }
     };
-    fetchBalanceData();
-  }, []);
+    if (walletAddress) {
+      fetchBalanceData();
+    }
+  }, [walletAddress]);
 
   return {
     balance,
