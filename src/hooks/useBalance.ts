@@ -15,6 +15,7 @@ export function useBalance(walletAddress: string) {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    console.log('walletAddress', walletAddress);
     const fetchBalanceData = async () => {
       try {
         const balance = await fetchBalance(walletAddress);
@@ -26,6 +27,7 @@ export function useBalance(walletAddress: string) {
       }
     };
     if (walletAddress) {
+      console.log('fetching balance');
       fetchBalanceData();
     }
   }, [walletAddress]);
