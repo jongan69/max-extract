@@ -9,7 +9,7 @@ const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 export function useCreatedCoins(walletAddress: string) {
   const { data, error, isLoading } = useSWR<ApiResponse>(
-    `https://frontend-api-v3.pump.fun/coins/user-created-coins/${walletAddress}?offset=0&limit=10000&includeNsfw=true`,
+    `/api/coins/user-created-coins/${walletAddress}?offset=0&limit=10000&includeNsfw=true`,
     fetcher
   );
 

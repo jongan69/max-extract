@@ -3,8 +3,13 @@ import { Twitter, Sun, Moon } from 'lucide-react';
 import { useAppContext } from '../contexts/AppContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { SortOption } from '../types';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onCreateAccount: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onCreateAccount }) => {
   const { sortOption, setSortOption, searchTerm, setSearchTerm } = useAppContext();
   const { theme, toggleTheme } = useTheme();
 
@@ -18,7 +23,7 @@ const Header: React.FC = () => {
               Max Extract
             </h1>
           </div>
-          
+
           <div className="flex flex-col sm:flex-row w-full md:w-auto gap-3 items-center">
             <div className="relative w-full md:w-64">
               <input
@@ -29,7 +34,7 @@ const Header: React.FC = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            
+
             <select
               className="px-4 py-2 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={sortOption}
@@ -39,7 +44,7 @@ const Header: React.FC = () => {
               <option value="mostLiked">Most Liked</option>
               <option value="leastLiked">Least Liked</option>
             </select>
-
+            <WalletMultiButton />
             <button
               onClick={toggleTheme}
               className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -51,6 +56,7 @@ const Header: React.FC = () => {
                 <Sun className="h-5 w-5 text-gray-300" />
               )}
             </button>
+
           </div>
         </div>
       </div>

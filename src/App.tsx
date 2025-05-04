@@ -6,12 +6,14 @@ import MainLayout from './layouts/MainLayout';
 import HomePage from './pages/HomePage';
 import CheckoutSuccessPage from './pages/CheckoutSuccessPage';
 import CheckoutCancelPage from './pages/CheckoutCancelPage';
+import WalletContextProvider from './contexts/WalletContextProvider';
 
 function App() {
   return (
-    <ThemeProvider>
-      <AppProvider>
-        <BrowserRouter>
+    <WalletContextProvider>
+      <ThemeProvider>
+        <AppProvider>
+          <BrowserRouter>
           <Routes>
             <Route path="/" element={<MainLayout />}>
               <Route index element={<HomePage />} />
@@ -22,6 +24,7 @@ function App() {
         </BrowserRouter>
       </AppProvider>
     </ThemeProvider>
+    </WalletContextProvider>
   );
 }
 

@@ -47,8 +47,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         walletAddress: rugger.wallet_address,
         description: rugger.description || '',
         createdAt: new Date(rugger.created_at).getTime(),
-        upvotes: rugger.votes?.filter(v => v.vote_type === 'up').length || 0,
-        downvotes: rugger.votes?.filter(v => v.vote_type === 'down').length || 0
+        upvotes: rugger.votes?.filter((v: { vote_type: string; }) => v.vote_type === 'up').length || 0,
+        downvotes: rugger.votes?.filter((v: { vote_type: string; }) => v.vote_type === 'down').length || 0
       }));
 
       setAccounts(formattedAccounts);
